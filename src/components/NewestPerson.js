@@ -1,6 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
+import peopleContext from '../context/peopleContext';
+import PeopleCount from './PepleCount';
 
-const NewestPerson = ({newestPerson}) => {
+const NewestPerson = () => {
+    const context = useContext(peopleContext);
+    const newestPerson = context.people[context.people.length - 1];
     useEffect(() => {
         const newestPersonName = `${newestPerson.firstName} ${newestPerson.lastName}`
         document.title = newestPersonName;
@@ -14,6 +18,7 @@ const NewestPerson = ({newestPerson}) => {
             <h2 className="mt-4 text-center">
                 Newest Person: {`${newestPerson.firstName} ${newestPerson.lastName}`}
             </h2>
+            <PeopleCount />
         </div>
     )
 }

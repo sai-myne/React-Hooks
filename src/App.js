@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
+import React, { useReducer } from 'react';
 import Form from './components/Form';
 import NewestPerson from './components/NewestPerson';
 import People from './components/People';
 
+import peopleContext from './context/peopleContext';
+import peopleReducer from './context/peopleReducer';
+import { ADD_PERSON } from './context/types';
+
 function App() {
-  const [people, setPeople] = useState([
+  const initialState = {people:[
     {
       firstName: 'John',
       lastName: 'Doe'
@@ -13,19 +17,29 @@ function App() {
       firstName: 'Jane',
       lastName: 'Doe'
     }
-  ]);
+  ]};
+  const [state, dispatch] = useReducer(peopleReducer, initialState)
   const addPerson = (person) => {
-    setPeople([...people, person]);
+    dispatch({
+      type: ADD_PERSON,
+      payload: person
+    })
   }
   
   return (
-    <div className="container mt-4">
-      <div className="row">
-        <Form addPerson={addPerson} />
-        <People people={people} />
-        <NewestPerson newestPerson={people[people.length-1]} />
-      </div>
-    </div>
+    <peopleContext.Provider
+      value={{
+        people: state.people,
+        addPerson
+      }}>
+        <div className="container mt-4">
+          <div className="row">
+            <Form  />
+            <People />
+            <NewestPerson  />
+          </div>
+        </div>
+      </peopleContext.Provider>
   );
 }
 
